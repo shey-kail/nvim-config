@@ -60,6 +60,11 @@ noremap <right> :vertical resize+5<CR>
 noremap <C-j> 5j
 noremap <C-k> 5k
 
+"use alt+o to add a new line down
+inoremap ^[o <Esc>o
+"use alt+O to add a new line up
+inoremap ^[O <Esc>O
+
 " ===
 " === run debug programs 
 " ===
@@ -67,14 +72,13 @@ map <F8> :call Rundb()<CR>
 func!Rundb()
 	if &filetype =='c' || &filetype == 'cpp'
 		exec "GdbLocal"
-	elseif &filetype == 'py'
-		set splitbelow 
-		:sp
-		:term python3 %
+	elseif &filetype == 'python'
+        :w
+		:!python3 %
 	elseif &filetype == 'md' || &filetype == 'markdown'
 		exec 'MarkdownPreview'	
 	elseif &filetype == 'html'
-		:Bracey
+		exec "Bracey"
 	endif
 endfunc
 
@@ -116,7 +120,7 @@ Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
 
 "  input behaviors
 Plug 'jiangmiao/auto-pairs'
-
+Plug 'mg979/vim-visual-multi'
 
 
 "  debug
@@ -230,7 +234,13 @@ let g:Hexokinase_optInPatterns = 'full_hex,triple_hex,rgb,rgba,hsl,hsla,colour_n
 "specify browser to open preview page
 let g:bracey_browser_command = 'chromium'
 
-
+" ===
+" ===Nvim-R
+" ===
+" prevent the replacement in '_' and '<-'
+let g:R_assign = 0
+" fix the keyboard shortcut's bug of \aa by using \ss' 
+autocmd FileType R nnoremap \sa ggVG\ss
 
 " ===
 " ===coc.nvim
@@ -298,7 +308,7 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Open file navigation.
-nmap ff :CocCommand explorer<CR>
+nmap tt :CocCommand explorer<CR>
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
